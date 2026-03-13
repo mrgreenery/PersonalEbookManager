@@ -1,15 +1,16 @@
-package com.wilber.books;
+package com.mrgreenery.books.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Book
 {
   @GeneratedValue(strategy = GenerationType.IDENTITY) //this is here because PostgreSQL SERIAL/uses auto-increment
@@ -21,10 +22,4 @@ public class Book
   private String comments;
   private double rating;
   private boolean read = false;
-
-  public Book()
-  {
-  }
-
-
 }

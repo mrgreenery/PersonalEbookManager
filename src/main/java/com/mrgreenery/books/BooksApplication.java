@@ -1,4 +1,4 @@
-package com.wilber.books;
+package com.mrgreenery.books;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

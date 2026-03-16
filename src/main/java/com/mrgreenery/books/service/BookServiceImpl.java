@@ -11,7 +11,17 @@ import java.util.Objects;
 @Service // Marks this class as a Spring service component.
 public class BookServiceImpl implements BookService
 {
-  @Autowired BookRepository bookRepository; //Injects the BookRepo dependency
+  private final BookRepository bookRepository;
+
+  @Autowired
+  // Constructor Injection, prioritizing simplicity and readability,
+  // is widely favored for clean coding practices, compile-time safety, and ease of testing
+  // Very common and preferred in Spring.Could also be done with @RequiredArgsConstructor
+  public BookServiceImpl(BookRepository bookRepository)
+  {
+    this.bookRepository  = bookRepository;
+  }
+
 
   @Override public Book saveBook(Book book)
   {
@@ -27,7 +37,7 @@ public class BookServiceImpl implements BookService
 
   @Override public Book updateBook(Book book, Long id)
   {
-    Book bookDb = bookRepository.findById(id).get();
+    Book bookDb = bookRepository.findById(id).orElseThrow();
 
     // Updates fields if they are not null or empty.
     if (Objects.nonNull(book.getTitle()) && !"".equalsIgnoreCase(book.getTitle())) {

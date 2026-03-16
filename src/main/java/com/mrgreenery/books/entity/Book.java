@@ -20,6 +20,6 @@ public class Book
   private String title;
   private String series;
   private String comments;
-  private double rating;
+  private Double rating; //Double, not double, so it can have null value.
   private boolean read = false;
 }

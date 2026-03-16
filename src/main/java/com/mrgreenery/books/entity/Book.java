@@ -1,9 +1,6 @@
 package com.mrgreenery.books.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -19,6 +16,7 @@ public class Book
   private String isbn;
   private String title;
   private String series;
+  @Column(columnDefinition = "TEXT") //comments were varchar(255) but some are longer. SQL type TEXT has no limit
   private String comments;
   private Double rating; //Double, not double, so it can have null value.
   private boolean read = false;

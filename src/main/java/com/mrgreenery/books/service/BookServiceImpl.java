@@ -43,8 +43,8 @@ public class BookServiceImpl implements BookService
     if (Objects.nonNull(book.getTitle()) && !"".equalsIgnoreCase(book.getTitle())) {
       bookDb.setTitle(book.getTitle());
     }
-    if (Objects.nonNull(book.getAuthor()) && !"".equalsIgnoreCase(book.getAuthor())) {
-      bookDb.setAuthor(book.getAuthor());
+    if (Objects.nonNull(book.getAuthors()) && !"".equalsIgnoreCase(book.getAuthors())) {
+      bookDb.setAuthors(book.getAuthors());
     }
     if (Objects.nonNull(book.getIsbn()) && !"".equalsIgnoreCase(book.getIsbn())) {
       bookDb.setIsbn(book.getIsbn());

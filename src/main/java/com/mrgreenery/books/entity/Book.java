@@ -15,7 +15,7 @@ public class Book
 {
   @GeneratedValue(strategy = GenerationType.IDENTITY) //this is here because PostgreSQL SERIAL/uses auto-increment
   @Id private Long id;
-  private String author;
+  private String authors;
   private String isbn;
   private String title;
   private String series;

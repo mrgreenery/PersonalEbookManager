@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +22,10 @@ public class CsvImportController
       csvImportService.importBooks();
     }
     catch (FileNotFoundException e)
+    {
+      throw new RuntimeException(e);
+    }
+    catch (IOException e)
     {
       throw new RuntimeException(e);
     }

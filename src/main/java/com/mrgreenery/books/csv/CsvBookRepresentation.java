@@ -21,9 +21,4 @@ public class CsvBookRepresentation
 
   @CsvBindByName(column = "series")
   private String series;
-
-  @CsvBindByName(column = "comments")
-  private String comments;
-
-
 }

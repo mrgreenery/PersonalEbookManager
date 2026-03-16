@@ -4,23 +4,14 @@ import com.mrgreenery.books.entity.Book;
 import com.mrgreenery.books.repository.BookRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.HashMap;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 @Service
-
 public class CsvImportService
 {
   private BookRepository bookRepository;
@@ -31,22 +22,37 @@ public class CsvImportService
 
   public CsvImportService(BookRepository bookRepository, CsvMapper csvMapper)
   {
-    this.bookRepository  = bookRepository;
+    this.bookRepository = bookRepository;
     this.csvMapper = csvMapper;
   }
 
-  public void importBooks() throws FileNotFoundException
+  public void importBooks() throws IOException
   {
-    Reader reader = new BufferedReader(new FileReader(filename));
+    //open file from path
+    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filename));
 
-    CsvToBean<CsvBookRepresentation> csvReader = new CsvToBeanBuilder(reader)
+    //delete bom (Byte Order Mark). Special bytes at the start of textfile that imply encoding and endianness)
+    bis.mark(3);
+    byte[] bom = new byte[3];
+    bis.read(bom);
+    if (!(bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF)) {
+      bis.reset();
+    }
+
+    Reader reader = new InputStreamReader(bis, StandardCharsets.UTF_8);
+
+    //parse CSV to Java objects
+    CsvToBean<CsvBookRepresentation> csvReader = new CsvToBeanBuilder<CsvBookRepresentation>(reader)
         .withType(CsvBookRepresentation.class)
         .withSeparator(',')
         .withIgnoreLeadingWhiteSpace(true)
         .withIgnoreEmptyLine(true)
         .build();
 
+    //put objects in list
     List<CsvBookRepresentation> results = csvReader.parse();
+
+    //put into entities and save
     List<Book> books = results.stream()
         .map(r -> csvMapper.mapTo(r))
         .collect(Collectors.toList());
@@ -54,4 +60,3 @@ public class CsvImportService
     bookRepository.saveAll(books);
   }
 }
-

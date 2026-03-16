@@ -13,7 +13,6 @@ public class CsvMapper
         .title(c.getTitle())
         .isbn(c.getIsbn())
         .series(c.getSeries())
-        .comments(c.getComments())
         .build();
   }
 }

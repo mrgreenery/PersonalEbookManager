@@ -16,8 +16,15 @@ public class Book
   private String isbn;
   private String title;
   private String series;
-  @Column(columnDefinition = "TEXT") //comments were varchar(255) but some are longer. SQL type TEXT has no limit
-  private String comments;
   private Double rating; //Double, not double, so it can have null value.
   private boolean read = false;
+  private String coverUrl;
+  private String publishedDate;
+  private String genre;
+
+  @Column(columnDefinition = "TEXT") //comments were varchar(255) but some are longer. SQL type TEXT has no limit
+  private String comments;
+
+  @Column(columnDefinition = "TEXT")
+  private String description;
 }

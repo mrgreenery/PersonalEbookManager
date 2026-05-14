@@ -4,10 +4,9 @@ import com.mrgreenery.books.entity.Book;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OpenLibraryMapper
-{
-  public static Book mapTo(OpenLibraryBook olBook, Book existingBook)
-  {
+public class OpenLibraryMapper {
+
+  public Book mapTo(OpenLibraryBook olBook, Book existingBook) {
     return Book.builder()
         .id(existingBook.getId())
         .authors(existingBook.getAuthors())
@@ -19,7 +18,8 @@ public class OpenLibraryMapper
         .read(existingBook.isRead())
         .coverUrl(olBook.getCover() != null ? olBook.getCover().getMedium() : null)
         .publishedDate(olBook.getPublishedDate())
-        .genre(olBook.getSubjects() != null ? olBook.getSubjects().get(0).getName() : null)
+        .genre(olBook.getSubjects() != null && !olBook.getSubjects().isEmpty()
+            ? olBook.getSubjects().get(0).getName() : null)
         .build();
   }
 }

@@ -1,70 +1,76 @@
 package com.mrgreenery.books.service;
 
 import com.mrgreenery.books.entity.Book;
+import com.mrgreenery.books.exception.BookNotFoundException;
 import com.mrgreenery.books.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
-@Service // Marks this class as a Spring service component.
-public class BookServiceImpl implements BookService
-{
+@Service
+@RequiredArgsConstructor
+public class BookServiceImpl implements BookService {
+
   private final BookRepository bookRepository;
 
-  @Autowired
-  // Constructor Injection, prioritizing simplicity and readability,
-  // is widely favored for clean coding practices, compile-time safety, and ease of testing
-  // Very common and preferred in Spring.Could also be done with @RequiredArgsConstructor
-  public BookServiceImpl(BookRepository bookRepository)
-  {
-    this.bookRepository  = bookRepository;
-  }
-
-
-  @Override public Book saveBook(Book book)
-  {
-    //saves and returns the book entity
+  @Override
+  public Book saveBook(Book book) {
     return bookRepository.save(book);
   }
 
-  @Override public List<Book> fetchBookList()
-  {
-    // Retrieves and returns a list of all book entities.
-    return (List<Book>) bookRepository.findAll();
+  @Override
+  public List<Book> fetchBookList() {
+    return bookRepository.findAll();
   }
 
-  @Override public Book updateBook(Book book, Long id)
-  {
-    Book bookDb = bookRepository.findById(id).orElseThrow();
+  @Override
+  public Book updateBook(Book book, Long id) {
+    Book bookDb = bookRepository.findById(id)
+        .orElseThrow(() -> new BookNotFoundException(id));
 
-    // Updates fields if they are not null or empty.
-    if (Objects.nonNull(book.getTitle()) && !"".equalsIgnoreCase(book.getTitle())) {
+    if (Objects.nonNull(book.getTitle()) && !book.getTitle().isBlank()) {
       bookDb.setTitle(book.getTitle());
     }
-    if (Objects.nonNull(book.getAuthors()) && !"".equalsIgnoreCase(book.getAuthors())) {
+    if (Objects.nonNull(book.getAuthors()) && !book.getAuthors().isBlank()) {
       bookDb.setAuthors(book.getAuthors());
     }
-    if (Objects.nonNull(book.getIsbn()) && !"".equalsIgnoreCase(book.getIsbn())) {
+    if (Objects.nonNull(book.getIsbn()) && !book.getIsbn().isBlank()) {
       bookDb.setIsbn(book.getIsbn());
     }
-    if (Objects.nonNull(book.getSeries()) && !"".equalsIgnoreCase(book.getSeries())) {
+    if (Objects.nonNull(book.getSeries()) && !book.getSeries().isBlank()) {
       bookDb.setSeries(book.getSeries());
     }
-    if (Objects.nonNull(book.getComments()) && !"".equalsIgnoreCase(book.getComments())) {
+    if (Objects.nonNull(book.getComments()) && !book.getComments().isBlank()) {
       bookDb.setComments(book.getComments());
     }
     if (Objects.nonNull(book.getRating())) {
       bookDb.setRating(book.getRating());
     }
+    if (Objects.nonNull(book.getCoverUrl()) && !book.getCoverUrl().isBlank()) {
+      bookDb.setCoverUrl(book.getCoverUrl());
+    }
+    if (Objects.nonNull(book.getPublishedDate()) && !book.getPublishedDate().isBlank()) {
+      bookDb.setPublishedDate(book.getPublishedDate());
+    }
+    if (Objects.nonNull(book.getGenre()) && !book.getGenre().isBlank()) {
+      bookDb.setGenre(book.getGenre());
+    }
+    if (Objects.nonNull(book.getDescription()) && !book.getDescription().isBlank()) {
+      bookDb.setDescription(book.getDescription());
+    }
+    // boolean: altijd updaten als het request 'read' bevat
+    bookDb.setRead(book.isRead());
 
-    // Saves and returns the updated book entity.
     return bookRepository.save(bookDb);
   }
 
-  @Override public void deleteBookById(Long id)
-  {
+  @Override
+  public void deleteBookById(Long id) {
+    if (!bookRepository.existsById(id)) {
+      throw new BookNotFoundException(id);
+    }
     bookRepository.deleteById(id);
   }
 }

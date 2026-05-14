@@ -1,6 +1,7 @@
 package com.mrgreenery.books.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -8,21 +9,27 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Book
-{
-  @GeneratedValue(strategy = GenerationType.IDENTITY) //this is here because PostgreSQL SERIAL/uses auto-increment
-  @Id private Long id;
-  private String authors;
-  private String isbn;
+public class Book {
+
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  private Long id;
+
+  @NotBlank(message = "Title is required")
   private String title;
+
+  @NotBlank(message = "Authors is required")
+  private String authors;
+
+  private String isbn;
   private String series;
-  private Double rating; //Double, not double, so it can have null value.
+  private Double rating;
   private boolean read = false;
   private String coverUrl;
   private String publishedDate;
   private String genre;
 
-  @Column(columnDefinition = "TEXT") //comments were varchar(255) but some are longer. SQL type TEXT has no limit
+  @Column(columnDefinition = "TEXT")
   private String comments;
 
   @Column(columnDefinition = "TEXT")
